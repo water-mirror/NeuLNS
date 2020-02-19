@@ -3,7 +3,7 @@ Neural Large Neighborhood Search
 
 Learn to Design Heuristics for Vehicle Routing Problem (VRP), by Deep Learning and Reinforcement Learning. This project provides the code to replicate the experiments in the paper:
 
-> Lei Gao, Mingxiang Chen, Qichang Chen, Ganzhong Luo, Nuoyi Zhu, Zhixin Liu, <cite> Learn to Design the Heuristics for Vehicle Routing Problem </cite>
+> <cite> Learn to Design the Heuristics for Vehicle Routing Problem </cite>
 
 Please install vrp_env-0.1.1 before training or evaluation. run train_model.py
 to train a cvrp/cvrptw model, and evaluation.py to evaluate on the test data. The
