@@ -13,4 +13,4 @@ Example:
 ```
 python train_model.py -n 99 -c 100
 ```
-By WaterMirror Ltd. www.water-mirror.com
+By 物界科技 WaterMirror Ltd. www.water-mirror.com
