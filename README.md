@@ -14,3 +14,5 @@ Example:
 python train_model.py -n 99 -c 100
 ```
 By 物界科技 WaterMirror Ltd. www.water-mirror.com
+
+We Are Hiring!! ML, OR, please email at liuzhixin AT watermirror.ai
