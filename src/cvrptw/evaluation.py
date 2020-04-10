@@ -35,7 +35,7 @@ if __name__ == "__main__":
     model = model.to(device)
     model.load_state_dict(torch.load("model/v8-tw-iter200-rm25-latest.model"))
 
-    inputs = read_input("data/vrptw_99.npy", N_STEPS)
+    inputs = read_input("data/vrptw_99.npy")
 
     def eval(batch_size=128, n_steps=100, instance=None):
         envs = create_batch_env(batch_size, 99, instance=instance)
