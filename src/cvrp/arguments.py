@@ -4,6 +4,7 @@ def args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--N_JOBS', default=99)
     parser.add_argument('-c', '--CAP', default=100)
+    parser.add_argument('-b', '--BATCH', default=100)
     parser.add_argument('--MAX_COORD', default=100)
     parser.add_argument('--MAX_DIST', default=(100*2**0.5))
     parser.add_argument('--LR', default=3e-4)

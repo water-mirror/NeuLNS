@@ -17,11 +17,12 @@ if __name__ == "__main__":
 
     device = torch.device(args.device)
 
-    N_JOBS = args.N_JOBS
-    CAP = args.CAP
-    MAX_COORD = args.MAX_COORD
-    MAX_DIST = args.MAX_DIST
-    LR = args.LR
+    N_JOBS = int(args.N_JOBS)
+    CAP = int(args.CAP)
+    batch_size = int(args.BATCH)
+    MAX_COORD = int(args.MAX_COORD)
+    MAX_DIST = float(args.MAX_DIST)
+    LR = float(args.LR)
 
     envs = create_batch_env(128,99)
 

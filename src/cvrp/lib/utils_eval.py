@@ -13,18 +13,19 @@ import argparse
 args = args()
 
 device = torch.device(args.device)
-N_JOBS = args.N_JOBS
-CAP = args.CAP
-MAX_COORD = args.MAX_COORD
-MAX_DIST = args.MAX_DIST
-LR = args.LR
+N_JOBS = int(args.N_JOBS)
+CAP = int(args.CAP)
+batch_size = min(int(args.BATCH), np.load("data/cvrp_99.npy").shape[0])
+MAX_COORD = int(args.MAX_COORD)
+MAX_DIST = float(args.MAX_DIST)
+LR = float(args.LR)
 
-N_ROLLOUT = args.N_ROLLOUT
-ROLLOUT_STEPS = args.ROLLOUT_STEPS
-N_STEPS = args.N_STEPS
+N_ROLLOUT = int(args.N_ROLLOUT)
+ROLLOUT_STEPS = int(args.ROLLOUT_STEPS)
+N_STEPS = int(args.N_STEPS)
 
-init_T=args.init_T
-final_T=args.final_T
+init_T=float(args.init_T)
+final_T=float(args.final_T)
 
 reward_norm = RunningMeanStd()
 
@@ -159,7 +160,7 @@ def create_env(index):
     env = Env(index)
     return env
 
-def create_batch_env(batch_size=100):
+def create_batch_env(batch_size=batch_size):
 
     class BatchEnv(object):
         def __init__(self,batch_size=batch_size):
@@ -225,7 +226,7 @@ def create_replay_buffer(n_jobs=99):
 
             return target_vs,advs
 
-        def gen_datas(self,last_v=0,_lambda = 1.0,batch_size=128):
+        def gen_datas(self,last_v=0,_lambda = 1.0,batch_size=batch_size):
             target_vs,advs = self.compute_values(last_v,_lambda)
             advs = (advs - advs.mean()) / advs.std()
             l,w = target_vs.shape
@@ -262,7 +263,7 @@ def create_replay_buffer(n_jobs=99):
 
     return Buffer()
 
-def roll_out(model,envs,states,n_steps=10,_lambda=0.99,batch_size=100,is_last=False,greedy=False):
+def roll_out(model,envs,states,n_steps=10,_lambda=0.99,batch_size=batch_size,is_last=False,greedy=False):
     buffer = create_replay_buffer()
     with torch.no_grad():
         model.eval()

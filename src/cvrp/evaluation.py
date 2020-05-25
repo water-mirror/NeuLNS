@@ -18,11 +18,12 @@ if __name__ == "__main__":
 
     device = torch.device(args.device)
 
-    N_JOBS = args.N_JOBS
-    CAP = args.CAP
-    MAX_COORD = args.MAX_COORD
-    MAX_DIST = args.MAX_DIST
-    n_steps=args.N_STEPS
+    N_JOBS = int(args.N_JOBS)
+    CAP = int(args.CAP)
+    batch_size = int(args.BATCH)
+    MAX_COORD = int(args.MAX_COORD)
+    MAX_DIST = float(args.MAX_DIST)
+    n_steps=int(args.N_STEPS)
 
     model = Model(4,64,2,16)
     model = model.to(device)
