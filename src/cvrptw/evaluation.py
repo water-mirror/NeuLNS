@@ -18,18 +18,19 @@ if __name__ == "__main__":
 
     device = torch.device(args.device)
 
-    N_JOBS = args.N_JOBS
-    CAP = args.CAP
-    MAX_COORD = args.MAX_COORD
-    MAX_DIST = args.MAX_DIST
-    LR = args.LR
-    DEPOT_END = args.DEPOT_END
-    SERVICE_TIME = args.SERVICE_TIME
-    TW_WIDTH = args.TW_WIDTH
+    N_JOBS = int(args.N_JOBS)
+    CAP = int(args.CAP)
+    batch_size = int(args.BATCH)
+    MAX_COORD = int(args.MAX_COORD)
+    MAX_DIST = float(args.MAX_DIST)
+    LR = float(args.LR)
+    DEPOT_END = int(args.DEPOT_END)
+    SERVICE_TIME = int(args.SERVICE_TIME)
+    TW_WIDTH = int(args.TW_WIDTH)
 
-    N_ROLLOUT = args.N_ROLLOUT
-    ROLLOUT_STEPS = args.ROLLOUT_STEPS
-    N_STEPS = args.N_STEPS
+    N_ROLLOUT = int(args.N_ROLLOUT)
+    ROLLOUT_STEPS = int(args.ROLLOUT_STEPS)
+    N_STEPS = int(args.N_STEPS)
 
     model = Model(8,64,2,16)
     model = model.to(device)
@@ -37,7 +38,7 @@ if __name__ == "__main__":
 
     inputs = read_input("data/vrptw_99.npy")
 
-    def eval(batch_size=128, n_steps=100, instance=None):
+    def eval(batch_size, n_steps=100, instance=None):
         envs = create_batch_env(batch_size, 99, instance=instance)
         states = envs.reset()
         states, history, actions, values = roll_out(model,envs,states,n_steps,False,64)
@@ -48,6 +49,9 @@ if __name__ == "__main__":
         print ("best tours:", best_tours)
         return best_cost, np.array(history), actions, values
 
+    ave_cost = []
     for i, [data, raw] in enumerate(inputs):
         print("instance " + str(i))
-        _ = eval(batch_size=256, n_steps=N_STEPS, instance=[data, raw])
+        cost, _, _, _ = eval(batch_size=batch_size, n_steps=N_STEPS, instance=[data, raw])
+        ave_cost.append(cost)
+    print("ave_cost", np.mean(ave_cost))

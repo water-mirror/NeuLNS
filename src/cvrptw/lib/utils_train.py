@@ -13,21 +13,22 @@ import argparse
 args = args()
 
 device = torch.device(args.device)
-N_JOBS = args.N_JOBS
-CAP = args.CAP
-MAX_COORD = args.MAX_COORD
-MAX_DIST = args.MAX_DIST
-LR = args.LR
-DEPOT_END = args.DEPOT_END
-SERVICE_TIME = args.SERVICE_TIME
-TW_WIDTH = args.TW_WIDTH
+N_JOBS = int(args.N_JOBS)
+CAP = int(args.CAP)
+batch_size = int(args.BATCH)
+MAX_COORD = int(args.MAX_COORD)
+MAX_DIST = float(args.MAX_DIST)
+LR = float(args.LR)
+DEPOT_END = int(args.DEPOT_END)
+SERVICE_TIME = int(args.SERVICE_TIME)
+TW_WIDTH = int(args.TW_WIDTH)
 
-N_ROLLOUT = args.N_ROLLOUT
-ROLLOUT_STEPS = args.ROLLOUT_STEPS
-N_STEPS = args.N_STEPS
+N_ROLLOUT = int(args.N_ROLLOUT)
+ROLLOUT_STEPS = int(args.ROLLOUT_STEPS)
+N_STEPS = int(args.N_STEPS)
 
-init_T=args.init_T
-final_T=args.final_T
+init_T=float(args.init_T)
+final_T=float(args.final_T)
 
 reward_norm = RunningMeanStd()
 
@@ -240,7 +241,7 @@ def create_env(n_jobs=99,_input=None):
     env = Env(n_jobs,_input)
     return env
 
-def create_batch_env(batch_size=64,n_jobs=99):
+def create_batch_env(batch_size=batch_size,n_jobs=99):
 
     class BatchEnv(object):
         def __init__(self,batch_size=batch_size):
@@ -310,7 +311,7 @@ def create_replay_buffer(n_jobs=99):
 
             return target_vs,advs
 
-        def gen_datas(self,last_v=0,_lambda = 1.0,batch_size=128):
+        def gen_datas(self,last_v=0,_lambda = 1.0,batch_size=batch_size):
             target_vs,advs = self.compute_values(last_v,_lambda)
             advs = (advs - advs.mean()) / advs.std()
             l,w = target_vs.shape
@@ -347,7 +348,7 @@ def create_replay_buffer(n_jobs=99):
 
     return Buffer()
 
-def roll_out(model,envs,states,n_steps=10,_lambda=0.99,batch_size=128,n_remove=10,is_last=False,greedy=False):
+def roll_out(model,envs,states,n_steps=10,_lambda=0.99,batch_size=batch_size,n_remove=10,is_last=False,greedy=False):
     buffer = create_replay_buffer()
     with torch.no_grad():
         model.eval()
@@ -427,7 +428,7 @@ def train_once(model,opt,dl,epoch,step,alpha=1.0):
 
 def eval_random(epochs,envs,n_steps=10):
 
-    def eval_once(epoch,n_instance=128,n_steps=n_steps,batch_size=128,alpha=1.0):
+    def eval_once(epoch,n_instance=128,n_steps=n_steps,batch_size=batch_size,alpha=1.0):
         nodes,edges = envs.reset()
         _sum = np.zeros(n_instance)
         for i in range(n_steps):
@@ -466,7 +467,7 @@ def train(model,envs,epochs,n_rollout,rollout_steps,train_steps,n_remove=10):
             datas,states = roll_out(model,envs,states,rollout_steps,n_remove=n_remove,is_last=False)
             all_datas.extend(datas)
 
-        dl = DataLoader(all_datas,batch_size=64,shuffle=True)
+        dl = DataLoader(all_datas,batch_size=batch_size,shuffle=True)
         for j in range(train_steps):
             train_once(model,opt,dl,epoch,0)
 
